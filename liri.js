@@ -1,8 +1,13 @@
-var keys = require('./keys.js') //alternative to environment variables
-var Twitter = require('twitter'); //connects to your twitter
-var spotify = require('spotify'); //spotify api
-var request = require('request'); //allows ajax requests
-var fs = require('fs'); //reads and writes files
+//alternative to environment variables
+var keys = require('./keys.js');
+//connects to your twitter
+var Twitter = require('twitter');
+//spotify api
+var spotify = require('spotify');
+//allows ajax requests
+var request = require('request');
+//reads and writes files
+var fs = require('fs');
 
 var getArtistNames = function(artist){
 	return artist.name;
@@ -11,7 +16,7 @@ var getArtistNames = function(artist){
 var getMeSpotify = function(songName){
 
 	if (songName === undefined){
-		songName = 'What\'s my age again';
+		songName = 'The Sign';
 	}
 
 	spotify.search({ type: 'track', query: songName }, function(err, data) {
@@ -38,10 +43,10 @@ var getMyTweets = function(){
 
 	var client = new Twitter(keys.twitterKeys);
 
-	var params = {screen_name: 'inrtracker'};
+	var params = {screen_name: '@fitsualt', count:20};
 	client.get('statuses/user_timeline', params, function(error, tweets, response){
 	  if (!error) {
-	    //console.log(tweets);
+	    console.log(tweets);
 	  	//debugger; //used to find out what's inside tweets in the iron-node console
 	  	for(var i=0; i < tweets.length; i++){
 	  		console.log(tweets[i].created_at);
@@ -57,10 +62,12 @@ var getMeMovie = function(movieName){
 	if (movieName === undefined){
 		movieName = 'Mr Nobody';
 	}
+ // Here we construct our URL
+	var queryUrl = "http://www.omdbapi.com/?t=" + movieName +  "&y=&plot=short&apikey=40e9cece";
 
-	var urlHit = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=full&tomatoes=true&r=json";
 
-	request(urlHit, function (error, response, body) {
+
+	request(queryUrl, function (error, response, body) {
 	  if (!error && response.statusCode == 200) {
 	  	var jsonData = JSON.parse(body);
 
