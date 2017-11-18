@@ -9,45 +9,43 @@ var request = require('request');
 //reads and writes files
 var fs = require('fs');
 
-var getArtistNames = function(artist){
-	return artist.name;
-}
+var Spotify = require('node-spotify-api');
 
+var spotify = new Spotify({
+  id: 'e15e8878cd1b4f1f92dad97d828de5e3',
+  secret: '8492ef3b8370497ca5654e7b13b33fc5'
+});
 var getMeSpotify = function(songName){
 
 	if (songName === undefined){
 		songName = 'The Sign';
 	}
 
-	spotify.search({ type: 'track', query: songName }, function(err, data) {
-	    if ( err ) {
-	        console.log('Error occurred: ' + err);
-	        return;
-	    }
-	 	//debugger; //used to find out what's inside data in the iron-node console
-
-	    var songs = data.tracks.items;
-
-	    for(var i = 0; i < songs.length; i++){
-	    	console.log(i);
-	    	console.log('artist(s): ' + songs[i].artists.map(getArtistNames));
-	    	console.log('song name: ' + songs[i].name);
-	    	console.log('preview song: ' + songs[i].preview_url);
-	    	console.log('album: ' + songs[i].album.name);
-	    	console.log('-----------------------------------');
-	    }
-	});
+spotify.search({ type: 'track', query: songName }, function(err, data) {
+  if (err) {
+    return console.log('Error occurred: ' + err);
+  }
+	else{
+      var songInfo = data.tracks.items[0];
+          console.log('');
+                          console.log("Artist Name: " + songInfo.artists[0].name)
+                          console.log("Song : " + songInfo.name)
+                          console.log("Album: " + songInfo.album.name)
+                          console.log("Preview link: " + songInfo.preview_url)
+// console.log(songResult);
+			}
+  });
 }
 
 var getMyTweets = function(){
 
 	var client = new Twitter(keys.twitterKeys);
 
-	var params = {screen_name: '@fitsualt', count:20};
+	var params = {screen_name: '@Dr Tedros', count:20};
 	client.get('statuses/user_timeline', params, function(error, tweets, response){
 	  if (!error) {
-	    console.log(tweets);
-	  	//debugger; //used to find out what's inside tweets in the iron-node console
+	    // console.log(tweets);
+	  	// debugger; //used to find out what's inside tweets in the iron-node console
 	  	for(var i=0; i < tweets.length; i++){
 	  		console.log(tweets[i].created_at);
 	  		console.log('');
